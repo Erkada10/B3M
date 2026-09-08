@@ -197,22 +197,7 @@ function showPublished(){
   showModal(h);
 }
 
-/* ====== ГЕНЕРАЦИЯ АВТОНОМНОГО КОДА ====== */
-
-function getCurrentCSS(){
-  var styles = document.querySelectorAll('style');
-  var css = '';
-  for(var i=0;i<styles.length;i++){
-    css += styles[i].textContent + '\n';
-  }
-  if(css.trim()) return css;
-  return '';
-}
-
-function getCurrentJS(){
-  var scripts = document.querySelectorAll('script[src]');
-  return null;
-}
+/* ====== ГЕНЕРАЦИЯ АВТОНОМНОГО КОДА (ТОЛЬКО ПРОСМОТР) ====== */
 
 function copyCode(){
   var pages = getAllPages();
@@ -221,23 +206,10 @@ function copyCode(){
     if(pages[k] !== null && pages[k] !== undefined && pages[k] !== '') clean[k] = pages[k];
   }
   var json = JSON.stringify(clean);
-  var cssText = getCurrentCSS();
-  var thisScript = document.currentScript;
-  var jsText = '';
-  var scripts = document.querySelectorAll('script');
-  for(var i=0;i<scripts.length;i++){
-    if(scripts[i].src){
-      jsText += scripts[i].textContent + '\n';
-    }
-  }
-  if(!cssText || !jsText){
-    fetchAssetsAndBuild(clean, json);
-    return;
-  }
-  buildAndCopy(cssText, jsText, json);
+  fetchAssetsAndBuild(json);
 }
 
-function fetchAssetsAndBuild(clean, json){
+function fetchAssetsAndBuild(json){
   var cssFetched = '', jsFetched = '';
   var cssDone = false, jsDone = false;
   fetch('style.css').then(function(r){return r.text();}).then(function(t){
@@ -248,44 +220,100 @@ function fetchAssetsAndBuild(clean, json){
   }).catch(function(){ jsDone = true; check(); });
   function check(){
     if(cssDone && jsDone){
-      if(cssFetched && jsFetched){
-        buildAndCopy(cssFetched, jsFetched, json);
-      } else {
-        buildInlineOnly(json);
-      }
+      buildViewerSite(cssFetched, json);
     }
   }
 }
 
-function buildInlineOnly(json){
-  toast('Не удалось загрузить style.css и script.js. Открой сайт через сервер (GitHub Pages) и попробуй снова.');
-}
-
-function buildAndCopy(cssText, jsText, json){
-  var newJs = jsText.replace(
-    /\/\* PUBLISHED_PAGES_START \*\/[\s\S]*?\/\* PUBLISHED_PAGES_END \*\//,
-    '/* PUBLISHED_PAGES_START */ ' + json + ' /* PUBLISHED_PAGES_END */'
-  );
-  var html = '<!DOCTYPE html>\n';
-  html += '<html lang="ru">\n<head>\n';
-  html += '<meta charset="UTF-8">\n';
-  html += '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n';
-  html += '<title>ГОЛОГРАММА</title>\n';
-  html += '<style>\n' + cssText + '\n</style>\n';
-  html += '</head>\n<body>\n';
-  html += '<div id="login"><h1 class="glow">ГОЛОГРАММА</h1><div class="sub">/// ВВЕДИТЕ ПАРОЛЬ ДОСТУПА ///</div><input type="password" id="pwd" placeholder="• • • • • •" autocomplete="off"><button id="loginBtn">ВОЙТИ</button><div class="lerr" id="lerr"></div></div>\n';
-  html += '<div id="app"><div class="sbar" id="sbar"></div><div class="tbar"><div class="logo glow">◈ ГОЛОГРАММА</div><div class="tabs" id="tabs"></div></div><div class="content"><div id="pdisp"></div></div><div class="apanel" id="apanel"><span class="ainfo">РЕЖИМ: АДМИН</span><button class="btn" id="newBtn">+ СТРАНИЦА</button><button class="btn" id="editBtn">РЕДАКТИРОВАТЬ</button><button class="btn d" id="delBtn">УДАЛИТЬ</button><button class="btn" id="pubBtn">ВИДНЫЕ ЗРИТЕЛЯМ</button><button class="btn s" id="copyBtn">СКОПИРОВАТЬ КОД</button><button class="btn" id="outBtn">ВЫХОД</button></div></div>\n';
-  html += '<script>\n' + newJs + '\n<\/script>\n';
-  html += '</body>\n</html>';
+function buildViewerSite(cssText, json){
+  var L = [];
+  L.push('<!DOCTYPE html>');
+  L.push('<html lang="ru">');
+  L.push('<head>');
+  L.push('<meta charset="UTF-8">');
+  L.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+  L.push('<title>ГОЛОГРАММА</title>');
+  L.push('<style>');
+  L.push(cssText);
+  L.push('</style>');
+  L.push('</head>');
+  L.push('<body>');
+  L.push('<div id="login">');
+  L.push('<h1 class="glow">ГОЛОГРАММА</h1>');
+  L.push('<div class="sub">/// ВВЕДИТЕ ПАРОЛЬ ДОСТУПА ///</div>');
+  L.push('<input type="password" id="pwd" placeholder="• • • • • •" autocomplete="off">');
+  L.push('<button id="loginBtn">ВОЙТИ</button>');
+  L.push('<div class="lerr" id="lerr"></div>');
+  L.push('</div>');
+  L.push('<div id="app">');
+  L.push('<div class="sbar" id="sbar"></div>');
+  L.push('<div class="tbar">');
+  L.push('<div class="logo glow">◈ ГОЛОГРАММА</div>');
+  L.push('<div class="tabs" id="tabs"></div>');
+  L.push('</div>');
+  L.push('<div class="content"><div id="pdisp"></div></div>');
+  L.push('</div>');
+  L.push('<script>');
+  L.push('var PUBLISHED_PAGES = ' + json + ';');
+  L.push('var VPWD = "взб";');
+  L.push('var user = null, curPage = 1;');
+  L.push('document.getElementById("loginBtn").onclick = login;');
+  L.push('document.getElementById("pwd").addEventListener("keydown", function(e){if(e.key==="Enter")login();});');
+  L.push('function login(){');
+  L.push('  var p = document.getElementById("pwd").value;');
+  L.push('  var err = document.getElementById("lerr");');
+  L.push('  if(p === VPWD){ user = "viewer"; }');
+  L.push('  else { err.textContent = "НЕВЕРНЫЙ ПАРОЛЬ"; document.getElementById("pwd").value=""; return; }');
+  L.push('  document.getElementById("login").style.display="none";');
+  L.push('  document.getElementById("app").style.display="flex";');
+  L.push('  render();');
+  L.push('}');
+  L.push('function esc(t){ var d=document.createElement("div"); d.textContent=t; return d.innerHTML; }');
+  L.push('function getNums(){ return Object.keys(PUBLISHED_PAGES).map(Number).sort(function(a,b){return a-b;}); }');
+  L.push('function render(){ renderSbar(); renderTabs(); renderPage(); }');
+  L.push('function renderSbar(){');
+  L.push('  var pc = Object.keys(PUBLISHED_PAGES).length;');
+  L.push('  document.getElementById("sbar").innerHTML = "<span>СТАТУС: ЗРИТЕЛЬ</span><span class=\\"pub\\">СТРАНИЦ: "+pc+"</span><span>СТРАНИЦА: "+curPage+"</span>";');
+  L.push('}');
+  L.push('function renderTabs(){');
+  L.push('  var nums = getNums(), h = "";');
+  L.push('  if(nums.length === 0){ document.getElementById("tabs").innerHTML = "<span style=\\"color:var(--d);padding:8px;font-size:13px\\">НЕТ СТРАНИЦ</span>"; return; }');
+  L.push('  for(var i=0;i<nums.length;i++){');
+  L.push('    var n = nums[i], act = n === curPage;');
+  L.push('    h += "<div class=\\"tab"+(act?" active":"")+"\\" onclick=\\"goToPage("+n+")\\">Стр."+n+"</div>";');
+  L.push('  }');
+  L.push('  document.getElementById("tabs").innerHTML = h;');
+  L.push('}');
+  L.push('function renderPage(){');
+  L.push('  var disp = document.getElementById("pdisp"), nums = getNums();');
+  L.push('  if(nums.length === 0){ disp.innerHTML = "<div class=\\"empty\\">/// СТРАНИЦЫ ОТСУТСТВУЮТ ///</div>"; return; }');
+  L.push('  if(!PUBLISHED_PAGES.hasOwnProperty(String(curPage))) curPage = nums[0] || 1;');
+  L.push('  var pc = PUBLISHED_PAGES[String(curPage)] || "";');
+  L.push('  if(pc.trim() === "") disp.innerHTML = "<div class=\\"pcard empty\\">/// ПУСТАЯ СТРАНИЦА "+curPage+" ///</div>";');
+  L.push('  else disp.innerHTML = "<div class=\\"pcard\\">"+esc(pc)+"</div>";');
+  L.push('}');
+  L.push('function goToPage(n){ curPage = n; render(); }');
+  L.push('document.addEventListener("keydown", function(e){');
+  L.push('  if(!user) return;');
+  L.push('  if(e.target.tagName === "INPUT") return;');
+  L.push('  var nums = getNums(); if(nums.length === 0) return;');
+  L.push('  var idx = nums.indexOf(curPage);');
+  L.push('  if(e.key === "ArrowLeft" && idx > 0){ curPage = nums[idx-1]; render(); }');
+  L.push('  else if(e.key === "ArrowRight" && idx < nums.length-1){ curPage = nums[idx+1]; render(); }');
+  L.push('});');
+  L.push('<\/script>');
+  L.push('</body>');
+  L.push('</html>');
+  var html = L.join('\n');
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(html).then(function(){
-      toast('Код скопирован! Вставьте в файл и сохраните.');
+      toast('Код для зрителей скопирован! Вставьте в index.html и сохраните.');
     }).catch(function(){ showCodeModal(html); });
   } else { showCodeModal(html); }
 }
 
 function showCodeModal(html){
-  var h = '<h2>КОД САЙТА</h2><p>Скопируйте код (Ctrl+A → Ctrl+C) и вставьте в файл:</p>';
+  var h = '<h2>КОД ДЛЯ ЗРИТЕЛЕЙ</h2><p>Скопируйте код (Ctrl+A → Ctrl+C) и вставьте в файл index.html:</p>';
   h += '<textarea readonly id="codeArea" onclick="this.select()"></textarea>';
   h += '<div class="brow"><button class="btn" onclick="closeModal()">ЗАКРЫТЬ</button></div>';
   showModal(h);
