@@ -1,0 +1,413 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --c: #00f0ff;       /* Циановый свечение */
+  --b: #001018;       /* Тёмный фон */
+  --b2: #002030;      /* Фон градиента */
+  --t: #c0f0ff;       /* Цвет текста */
+  --d: #4080a0;       /* Вторичный цвет (детали) */
+  --r: #ff3060;       /* Красный (ошибки/удаление) */
+  --g: #00ff80;       /* Зелёный (публикация) */
+  --y: #ffaa00;       /* Жёлтый (черновики) */
+}
+
+body {
+  background: var(--b);
+  color: var(--t);
+  font-family: 'Courier New', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Сетка + радиальный градиент */
+  background-image: linear-gradient(rgba(0, 240, 255, .03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 240, 255, .03) 1px, transparent 1px),
+                    radial-gradient(ellipse at center, var(--b2) 0%, var(--b) 70%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
+/* Эффект сканирующего луча */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(transparent 50%, rgba(0, 240, 255, .02) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+.glow {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+}
+
+/* --- ЭКРАН ВХОДА --- */
+#login {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  background: rgba(0, 16, 24, .95);
+}
+
+#login h1 {
+  font-size: clamp(28px, 8vw, 64px);
+  color: var(--c);
+  text-shadow: 0 0 20px var(--c), 0 0 40px var(--c);
+  letter-spacing: .3em;
+  margin-bottom: 8px;
+  animation: flk 3s infinite;
+}
+
+@keyframes flk {
+  0%, 92%, 94%, 97%, 100% { opacity: 1; }
+  93% { opacity: .6; }
+  96% { opacity: .8; }
+}
+
+#login .sub {
+  color: var(--d);
+  font-size: 13px;
+  margin-bottom: 40px;
+  letter-spacing: .1em;
+}
+
+#login input {
+  background: rgba(0, 240, 255, .05);
+  border: 1px solid var(--c);
+  color: var(--t);
+  padding: 12px 20px;
+  font-family: inherit;
+  font-size: 16px;
+  border-radius: 4px;
+  outline: none;
+  text-align: center;
+  letter-spacing: .1em;
+  width: 250px;
+  max-width: 80vw;
+  box-shadow: 0 0 10px rgba(0, 240, 255, .2), inset 0 0 10px rgba(0, 240, 255, .1);
+  transition: .3s;
+}
+
+#login input:focus {
+  box-shadow: 0 0 20px rgba(0, 240, 255, .5), inset 0 0 10px rgba(0, 240, 255, .2);
+}
+
+#login button {
+  margin-top: 16px;
+  padding: 12px 40px;
+  background: transparent;
+  border: 1px solid var(--c);
+  color: var(--c);
+  font-family: inherit;
+  font-size: 14px;
+  letter-spacing: .2em;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: .3s;
+}
+
+#login button:hover {
+  background: rgba(0, 240, 255, .1);
+  box-shadow: 0 0 20px rgba(0, 240, 255, .4);
+}
+
+.lerr {
+  color: var(--r);
+  margin-top: 12px;
+  font-size: 13px;
+  min-height: 18px;
+  text-shadow: 0 0 10px var(--r);
+}
+
+/* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
+#app {
+  display: none;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.sbar {
+  padding: 6px 16px;
+  font-size: 11px;
+  color: var(--d);
+  letter-spacing: .05em;
+  border-bottom: 1px solid rgba(0, 240, 255, .1);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.sbar .pub { color: var(--g); }
+.sbar .dr { color: var(--y); }
+
+.tbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(0, 240, 255, .2);
+  flex-wrap: wrap;
+  background: rgba(0, 16, 24, .8);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.tbar .logo {
+  font-size: 18px;
+  color: var(--c);
+  text-shadow: 0 0 10px var(--c);
+  letter-spacing: .2em;
+  white-space: nowrap;
+}
+
+/* ТАБЫ (ВКЛАДКИ) */
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  flex: 1;
+  padding: 4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c) transparent;
+}
+
+.tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabs::-webkit-scrollbar-thumb {
+  background: var(--c);
+  border-radius: 2px;
+}
+
+.tab {
+  padding: 8px 14px;
+  border: 1px solid rgba(0, 240, 255, .3);
+  background: rgba(0, 240, 255, .03);
+  color: var(--t);
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: .2s;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tab:hover {
+  border-color: var(--c);
+  background: rgba(0, 240, 255, .08);
+}
+
+.tab.active {
+  border-color: var(--c);
+  background: rgba(0, 240, 255, .15);
+  box-shadow: 0 0 15px rgba(0, 240, 255, .3);
+  color: var(--c);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot.g { background: var(--g); box-shadow: 0 0 6px var(--g); }
+.dot.y { background: var(--y); box-shadow: 0 0 6px var(--y); }
+
+/* КНОПКИ */
+.btn {
+  padding: 8px 16px;
+  border: 1px solid rgba(0, 240, 255, .4);
+  background: rgba(0, 240, 255, .05);
+  color: var(--c);
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  letter-spacing: .05em;
+  transition: .2s;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: rgba(0, 240, 255, .15);
+  box-shadow: 0 0 12px rgba(0, 240, 255, .3);
+  border-color: var(--c);
+}
+
+.btn.d {
+  border-color: rgba(255, 48, 96, .4);
+  color: var(--r);
+  background: rgba(255, 48, 96, .05);
+}
+.btn.d:hover {
+  background: rgba(255, 48, 96, .15);
+  box-shadow: 0 0 12px rgba(255, 48, 96, .3);
+}
+
+.btn.s {
+  border-color: rgba(0, 255, 128, .4);
+  color: var(--g);
+  background: rgba(0, 255, 128, .05);
+}
+.btn.s:hover {
+  background: rgba(0, 255, 128, .15);
+  box-shadow: 0 0 12px rgba(0, 255, 128, .3);
+}
+
+/* КОНТЕНТ */
+.content {
+  flex: 1;
+  padding: 24px 16px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pcard {
+  background: rgba(0, 240, 255, .02);
+  border: 1px solid rgba(0, 240, 255, .15);
+  border-radius: 8px;
+  padding: 24px;
+  min-height: 300px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.8;
+  font-size: 15px;
+  box-shadow: 0 0 30px rgba(0, 240, 255, .05), inset 0 0 20px rgba(0, 240, 255, .02);
+  position: relative;
+}
+
+.pcard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--c), transparent);
+  opacity: .5;
+}
+
+.earea {
+  width: 100%;
+  min-height: 300px;
+  background: rgba(0, 240, 255, .05);
+  border: 1px solid var(--c);
+  border-radius: 8px;
+  padding: 24px;
+  color: var(--t);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.8;
+  resize: vertical;
+  outline: none;
+  box-shadow: 0 0 20px rgba(0, 240, 255, .15), inset 0 0 10px rgba(0, 240, 255, .05);
+}
+
+.earea:focus {
+  box-shadow: 0 0 30px rgba(0, 240, 255, .3), inset 0 0 10px rgba(0, 240, 255, .1);
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--d);
+  font-size: 14px;
+  letter-spacing: .1em;
+}
+
+.pstat {
+  font-size: 11px;
+  margin-bottom: 8px;
+  letter-spacing: .05em;
+}
+
+/* ПАНЕЛЬ АДМИНА */
+.apanel {
+  display: none;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(0, 240, 255, .15);
+  flex-wrap: wrap;
+  background: rgba(0, 16, 24, .8);
+  backdrop-filter: blur(10px);
+}
+
+.ainfo {
+  color: var(--d);
+  font-size: 12px;
+  align-self: center;
+  margin-right: auto;
+  letter-spacing: .05em;
+}
+
+/* МОДАЛЬНЫЕ ОКНА */
+.ovr {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 16, 24, .92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+
+.mdl {
+  background: var(--b);
+  border: 1px solid var(--c);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 0 40px rgba(0, 240, 255, .3);
+}
+
+.mdl h2 {
+  color: var(--c);
+  font-size: 18px;
+  margin-bottom: 16px;
+  letter-spacing: .1em;
+}
+
+.mdl p {
+  color: var(--t);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.mdl textarea {
+  width: 100%;
+  height: 200px;
+  background: rgba(0, 240, 255, .05);
+  border: 1px solid rgba(0, 240, 255, .3);
+  color: var(--t);
+  padding: 12px;
+  font-family: monospace;
+  font-size: 11px;
+  border-radius: 4px;
+  resize: vertical;
+  outline: none;
+}
+
+.brow {
+  display: flex;
+  gap:

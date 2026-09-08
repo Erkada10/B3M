@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ГОЛОГРАММА — РЕДАКТОР</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login">
+    <h1 class="glow">ГОЛОГРАММА</h1>
+    <div class="sub">/// ВВЕДИТЕ ПАРОЛЬ ДОСТУПА ///</div>
+    <input type="password" id="pwd" placeholder="• • • • • •" autocomplete="off">
+    <button id="loginBtn">ВОЙТИ</button>
+    <div class="lerr" id="lerr"></div>
+  </div>
+
+  <div id="app">
+    <div class="sbar" id="sbar"></div>
+    <div class="tbar">
+      <div class="logo glow">◈ ГОЛОГРАММА</div>
+      <div class="tabs" id="tabs"></div>
+    </div>
+    <div class="content"><div id="pdisp"></div></div>
+    <div class="apanel" id="apanel">
+      <span class="ainfo" id="ainfo">РЕЖИМ: АДМИН</span>
+      <button class="btn" id="newBtn">+ СТРАНИЦА</button>
+      <button class="btn" id="editBtn">РЕДАКТИРОВАТЬ</button>
+      <button class="btn d" id="delBtn">УДАЛИТЬ</button>
+      <button class="btn" id="pubBtn">ВИДНЫЕ ЗРИТЕЛЯМ</button>
+      <button class="btn s" id="copyBtn">СКОПИРОВАТЬ КОД</button>
+      <button class="btn" id="outBtn">ВЫХОД</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
