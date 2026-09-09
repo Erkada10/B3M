@@ -88,8 +88,8 @@ body { font-family: Tahoma, Arial, sans-serif; font-size: 13px; background: #ede
 <div class="layout"><div class="sidebar" id="sidebar"></div><div class="content" id="content"></div></div>
 </div>
 <script>
-var PUBLISHED_PAGES = {};
-var PUBLISHED_NEWS = [{"id":1,"title":"Привет, друзья!","content":"Внеземное богатство возвращается!\n\nОжидайте выход новых глав...","date":"09.09.2026"}];
+var PUBLISHED_PAGES = {"1":"Сейчас глав нет, но мы их готовим"};
+var PUBLISHED_NEWS = [{"id":1,"title":"«Внеземное богатство» снова в деле","content":"Хорошие новости для поклонников «Внеземного богатства»!\nПроект возвращается: мы активно работаем над новыми главами и планируем опубликовать их в ближайшее время. Спасибо, что остаётесь с нами — продолжение уже на подходе. 😊","date":"09.09.2026"}];
 var VPWD = "взб";
 var user = null, curView = "page", curPage = 1;
 document.getElementById("loginBtn").onclick = login;
@@ -179,9 +179,5 @@ document.addEventListener("keydown", function(e){
   else if(e.key === "ArrowRight" && idx < nums.length-1){ curPage = nums[idx+1]; render(); }
 });
 </script>
-</body>
-</html>
-  </div>
-  <script src="script.js"></script>
 </body>
 </html>
