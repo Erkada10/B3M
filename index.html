@@ -89,7 +89,7 @@ body { font-family: Tahoma, Arial, sans-serif; font-size: 13px; background: #ede
 </div>
 <script>
 var PUBLISHED_PAGES = {"1":"Сейчас глав нет, но мы их готовим"};
-var PUBLISHED_NEWS = [{"id":1,"title":"«Внеземное богатство» снова в деле","content":"Хорошие новости для поклонников «Внеземного богатства»!\nПроект возвращается: мы активно работаем над новыми главами и планируем опубликовать их в ближайшее время. Спасибо, что остаётесь с нами — продолжение уже на подходе. 😊","date":"09.09.2026"}];
+var PUBLISHED_NEWS = [{"id":1,"title":"«Внеземное богатство» снова в деле","content":"Хорошие новости для поклонников «Внеземного богатства»!\nПроект возвращается: мы активно работаем над новыми главами и планируем опубликовать их в ближайшее время. Спасибо, что остаётесь с нами — продолжение уже на подходе. 😊","date":"10.09.2026"}];
 var VPWD = "взб";
 var user = null, curView = "page", curPage = 1;
 document.getElementById("loginBtn").onclick = login;
@@ -138,6 +138,49 @@ function renderSidebar(){
   h += '<div class="side-header side-header-news">Новости</div>';
   if(news.length === 0){ h += '<div class="side-empty">Нет новостей</div>'; }
   else { h += '<div class="side-item side-item-news'+(curView==='news'?' active':'')+'" onclick="goToNews()">📰 Новости ('+news.length+')</div>'; }
+  h += '</div>';
+  h += '<div class="side-section"><div class="side-header">Страницы</div>';
+  if(nums.length === 0){ h += '<div class="side-empty">Нет страниц</div>'; }
+  else {
+    h += '<div class="page-select-wrap"><button class="page-select-btn" onclick="togglePageList()">📄 Стр. '+curPage+' <span class="page-select-arrow">▼</span></button>';
+    h += '<div class="page-select-list" id="pageSelectList">';
+    for(var i=0;i<nums.length;i++){ var n=nums[i]; var act=(curView==='page'&&n===curPage); h += '<div class="side-item'+(act?' active':'')+'" onclick="goToPage('+n+')">Стр. '+n+'</div>'; }
+    h += '</div></div>';
+  }
+  h += '</div>';
+  document.getElementById("sidebar").innerHTML = h;
+}
+function togglePageList(){ var list=document.getElementById("pageSelectList"); if(list) list.classList.toggle("open"); }
+function renderContent(){
+  var el = document.getElementById("content");
+  if(curView === "news"){
+    var news = getNews();
+    if(news.length === 0){ el.innerHTML = '<div class="empty-state">Нет новостей</div>'; return; }
+    var h = "";
+    for(var i=0;i<news.length;i++){ var item=news[i]; h += '<div class="news-card"><h3>'+esc(item.title||"Без заголовка")+'</h3><div class="date">'+esc(item.date||"")+'</div><p>'+esc(item.content||"")+'</p></div>'; }
+    el.innerHTML = h; return;
+  }
+  var nums = getPageNums();
+  if(nums.length === 0){ el.innerHTML = '<div class="empty-state">Нет страниц</div>'; return; }
+  if(!PUBLISHED_PAGES.hasOwnProperty(String(curPage))) curPage = nums[0]||1;
+  var pc = PUBLISHED_PAGES[String(curPage)]||"";
+  if(pc.trim() === "") el.innerHTML = '<div class="page-card"><div class="empty-state">Пустая страница '+curPage+'</div></div>';
+  else el.innerHTML = '<div class="page-card">'+esc(pc)+'</div>';
+}
+function goToPage(n){ curView="page"; curPage=n; render(); }
+function goToNews(){ curView="news"; render(); }
+document.addEventListener("keydown", function(e){
+  if(!user) return;
+  if(e.target.tagName === "INPUT") return;
+  if(curView !== "page") return;
+  var nums = getPageNums(); if(nums.length === 0) return;
+  var idx = nums.indexOf(curPage);
+  if(e.key === "ArrowLeft" && idx > 0){ curPage = nums[idx-1]; render(); }
+  else if(e.key === "ArrowRight" && idx < nums.length-1){ curPage = nums[idx+1]; render(); }
+});
+</script>
+</body>
+</html>e-item side-item-news'+(curView==='news'?' active':'')+'" onclick="goToNews()">📰 Новости ('+news.length+')</div>'; }
   h += '</div>';
   h += '<div class="side-section"><div class="side-header">Страницы</div>';
   if(nums.length === 0){ h += '<div class="side-empty">Нет страниц</div>'; }
