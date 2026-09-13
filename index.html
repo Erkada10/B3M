@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ВЗБ</title>
 <style>
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Tahoma, Arial, sans-serif; font-size: 13px; background: #edeef0; color: #333; line-height: 1.4; }
 #login { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #edeef0; z-index: 9999; }
@@ -51,6 +50,7 @@ body { font-family: Tahoma, Arial, sans-serif; font-size: 13px; background: #ede
 .page-select-list .side-item.active { background: #dae1e8; font-weight: bold; }
 .content { flex: 1; min-width: 0; }
 .page-card, .news-card { background: #fff; border: 1px solid #e1e3e5; border-radius: 4px; padding: 15px; margin-bottom: 10px; }
+.page-card { white-space: pre-wrap; word-wrap: break-word; }
 .news-card h3 { margin: 0 0 8px 0; font-size: 15px; color: #333; }
 .news-card .date { font-size: 11px; color: #777; margin-bottom: 8px; }
 .news-card p { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
@@ -74,7 +74,6 @@ body { font-family: Tahoma, Arial, sans-serif; font-size: 13px; background: #ede
 #modal-root .btn-cancel { padding: 6px 12px; background: transparent; border: 1px solid #bdc3c7; color: #333; border-radius: 3px; font-family: inherit; font-size: 12px; cursor: pointer; margin-left: 8px; }
 #modal-root pre { background: #f0f0f0; padding: 10px; border-radius: 3px; font-family: Consolas, monospace; font-size: 12px; white-space: pre-wrap; word-break: break-all; margin-top: 10px; }
 @media (max-width: 768px) { .layout { flex-direction: column; } .sidebar { width: 100%; margin-bottom: 10px; } }
-
 </style>
 </head>
 <body>
@@ -88,7 +87,7 @@ body { font-family: Tahoma, Arial, sans-serif; font-size: 13px; background: #ede
 <div class="layout"><div class="sidebar" id="sidebar"></div><div class="content" id="content"></div></div>
 </div>
 <script>
-var PUBLISHED_PAGES = {"1":"Сейчас глав нет, но мы их готовим"};
+var PUBLISHED_PAGES = {"1":"Глава 1: Точка отсчёта\n\nЭтот рассказ повествует о интересных похождениях человека по имени Фил Де-ворс. Он обладает способностями 3-го класса: взламывать замки на расстоянии и не появляться на камерах и в зеркалах. Идеальное сочетание для вора. А сейчас Фил просыпается в «своей» квартире. На планете Нью-Ворлд.\n\nУтро, время 11:35, планета: Нью-Ворлд.\n\nНовый день. Новое утро. Фил проснулся в отличном настроении. Пошёл в ванную. Умылся прохладной водой. Дальше на кухню. Фил начал готовить себе завтрак из того, что нашёл в полках. Во время готовки на кухню прибежал питомец Фила. Это был гусь по имени Густ. Он жалобно просил у Фила кусочек мягкого хлеба, который Фил держал у себя в руках.\n«Хлеба хочешь?» — спросил Фил.\n«Га!» — уверенно ответил Густ.\n\nПосле этого он получил свой заслуженный кусочек наслаждения. После завтрака пошли они гулять.\n\nУтро, время 12:21, планета: Нью-Ворлд.\n\nВыходя на улицу, их окутала спокойная атмосфера офисной планеты Нью-Ворлд. Вокруг большие офисные небоскрёбы, сочетающиеся с жилыми домами. Здесь всегда зима, а сейчас идёт медленно снегопад. Тихий вид города в постоянном течение.\n\nДень, время 15:07, планета: Нью-Ворлд.\n\nПрошёл час, другой, и Фил решил «приобрести» обед для себя и Густа. Сначала Фил отправился в продуктовый магазин. Зайдя внутрь, он начал выбирать продукты.\n«Пиво или ультрапитательный обед? Выбор очевиден! Очевидно, что ультрапитательный обед мне не нужен!»\n\nВзяв две баночки безалкогольного наслаждения, он уверенно пошёл к кассе, а затем уверенно прошёл мимо кассы, пока кассирша не видела.\n«Дальше нужно купить что-нибудь пожевать».\n\nОни отправились в булочную, которая открыта более 1е6 часов (1.000.000 часов или же 100 лет). Внутри было как всегда много народа. Выбор выпечки был очень большим. Фила заинтересовала булочка с ягодной начинкой. В это время в булочную пришла новая поставка муки. Курьер медленно заносил два мешка муки. Было видно, что ещё чуть-чуть и он упадёт. Через мгновение курьер споткнулся и начал падать.\n«Это мой шанс!»\n\nФил ловким движением руки схватил кур... А... Не так...\nФил ловким движением руки схватил несколько булочек и, пока все отвлеклись на курьера, он незаметно свалил с булочной. Позже Фил с Густом сидели в небольшом парке. Густ ел булочку, а Фил ещё и запивал её священным напитком.\n«Большие высотки, шум машин, снегопад... Скукота!»\n«Стоп, что? Фил, ты ли это? Ага, точно ты! Давненько не виделись».\n\nЭто был старый знакомый Фила. Его звали Джек.\n«Действительно давно».\n«Слушай, Фил. Ты случаем не нашёл работу?»\n«Даже не искал».\n\nФил с интересом ждал, что ответит Джек.\n«Я собираю команду для ограблений. Присоединяйтесь к нам. Нам нужны такие таланты, как ты!»\n«Ты мне дом, еду, и по рукам!»\n«Га!»\n«И ещё со мной будет мой гусь».\n«Тогда добро пожаловать в команду».\n\nДжек просто хочет попробовать то, что считается нелегальным, а Фил может идеально в этом помочь.\nДальше они пошли к Джеку, чтобы обсудить многое за долгое время.\n\nКонец 1 главы."};
 var PUBLISHED_NEWS = [{"id":1,"title":"«Внеземное богатство» снова в деле","content":"Хорошие новости для поклонников «Внеземного богатства»!\nПроект возвращается: мы активно работаем над новыми главами и планируем опубликовать их в ближайшее время. Спасибо, что остаётесь с нами — продолжение уже на подходе. 😊","date":"10.09.2026"}];
 var VPWD = "взб";
 var user = null, curView = "page", curPage = 1;
@@ -100,7 +99,7 @@ function login(){
   var err = document.getElementById("lerr");
   if(p === VPWD){
     err.style.color = "#4bb34b";
-    err.textContent = "✓ Верно. Вход...";
+    err.textContent = "\u2713 Верно. Вход...";
     setTimeout(function(){
       document.getElementById("login").style.display = "none";
       document.getElementById("app").style.display = "flex";
@@ -111,7 +110,7 @@ function login(){
     }, 400);
   } else {
     err.style.color = "#dd4b39";
-    err.textContent = "✗ Неверный пароль";
+    err.textContent = "\u2717 Неверный пароль";
     document.getElementById("pwd").value = "";
     document.getElementById("pwd").focus();
   }
@@ -137,12 +136,12 @@ function renderSidebar(){
   h += '<div class="side-section side-news">';
   h += '<div class="side-header side-header-news">Новости</div>';
   if(news.length === 0){ h += '<div class="side-empty">Нет новостей</div>'; }
-  else { h += '<div class="side-item side-item-news'+(curView==='news'?' active':'')+'" onclick="goToNews()">📰 Новости ('+news.length+')</div>'; }
+  else { h += '<div class="side-item side-item-news'+(curView==='news'?' active':'')+'" onclick="goToNews()">\uD83D\uDCF0 Новости ('+news.length+')</div>'; }
   h += '</div>';
   h += '<div class="side-section"><div class="side-header">Страницы</div>';
   if(nums.length === 0){ h += '<div class="side-empty">Нет страниц</div>'; }
   else {
-    h += '<div class="page-select-wrap"><button class="page-select-btn" onclick="togglePageList()">📄 Стр. '+curPage+' <span class="page-select-arrow">▼</span></button>';
+    h += '<div class="page-select-wrap"><button class="page-select-btn" onclick="togglePageList()">\uD83D\uDCC4 Стр. '+curPage+' <span class="page-select-arrow">\u25BC</span></button>';
     h += '<div class="page-select-list" id="pageSelectList">';
     for(var i=0;i<nums.length;i++){ var n=nums[i]; var act=(curView==='page'&&n===curPage); h += '<div class="side-item'+(act?' active':'')+'" onclick="goToPage('+n+')">Стр. '+n+'</div>'; }
     h += '</div></div>';
